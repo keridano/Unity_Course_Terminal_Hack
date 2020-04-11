@@ -1,19 +1,21 @@
 ﻿using System;
 using UnityEngine;
 
-
+public enum Screen
+{
+    MainMenu,
+    Password,
+    Win
+}
 
 public class Hacker : MonoBehaviour
 {
-    enum Screen
-    {
-        MainMenu,
-        Password,
-        Win
-    }
-
     int currentLevel;
     Screen currentScreen = Screen.MainMenu;
+
+    const string levelOnePwd = "science";
+    const string levelTwoPwd = "judgement";
+    const string levelThreePwd = "solar_storm";
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +42,22 @@ public class Hacker : MonoBehaviour
         }
         else if (currentScreen == Screen.Password)
         {
-            //TODO
+            CheckPassword(input);
+        }
+    }
+
+    private void CheckPassword(string input)
+    {
+        if(currentLevel == 1 && input == levelOnePwd ||
+            currentLevel == 2 && input == levelTwoPwd ||
+                currentLevel == 3 && input == levelThreePwd)
+        {
+            Terminal.WriteLine("Congratulation! Password is correct");
+        }
+        else
+        {
+            Terminal.WriteLine("Sorry! Password is incorrect");
+            Terminal.WriteLine("Please, try again: ");
         }
     }
 
