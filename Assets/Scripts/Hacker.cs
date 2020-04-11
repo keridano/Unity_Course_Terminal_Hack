@@ -12,6 +12,7 @@ public class Hacker : MonoBehaviour
 {
     int currentLevel;
     Screen currentScreen = Screen.MainMenu;
+    string password;
 
     const string levelOnePwd = "science";
     const string levelTwoPwd = "judgement";
@@ -46,26 +47,12 @@ public class Hacker : MonoBehaviour
         }
     }
 
-    private void CheckPassword(string input)
-    {
-        if(currentLevel == 1 && input == levelOnePwd ||
-            currentLevel == 2 && input == levelTwoPwd ||
-                currentLevel == 3 && input == levelThreePwd)
-        {
-            Terminal.WriteLine("Congratulation! Password is correct");
-        }
-        else
-        {
-            Terminal.WriteLine("Sorry! Password is incorrect");
-            Terminal.WriteLine("Please, try again: ");
-        }
-    }
-
     private void ShowMainMenu(string greetings = "Hello")
     {
         //Reset level And screen
         currentLevel = 0;
         currentScreen = Screen.MainMenu;
+        password = null;
         Terminal.ClearScreen();
 
         Terminal.WriteLine(greetings);
@@ -78,20 +65,26 @@ public class Hacker : MonoBehaviour
 
     private void RunMainMenu(string input)
     {
-        switch (input)
+        if (input == "1" || input == "2" || input == "3")
         {
-            case "1":
-            case "2":
-            case "3":
-                int.TryParse(input, out currentLevel);
-                StartGame();
-                break;
-            case "007":
-                Terminal.WriteLine("Please select the level, Mr. Bond");
-                break;
-            default:
-                Terminal.WriteLine("Please select a correct level");
-                break;
+            int.TryParse(input, out currentLevel);
+
+            //Set Pwd for level
+            password = currentLevel == 1
+                ? levelOnePwd
+                : currentLevel == 2
+                    ? password = levelTwoPwd
+                    : password = levelThreePwd;
+
+            StartGame();
+        }
+        else if (input == "007")
+        {
+            Terminal.WriteLine("Please select the level, Mr. Bond");
+        }
+        else
+        {
+            Terminal.WriteLine("Please select a correct level");
         }
     }
 
@@ -107,6 +100,19 @@ public class Hacker : MonoBehaviour
         {
             Terminal.WriteLine("You selected level " + currentLevel);
             Terminal.WriteLine("Please enter your Password: ");
+        }
+    }
+
+    private void CheckPassword(string input)
+    {
+        if (input == password)
+        {
+            Terminal.WriteLine("Congratulation! Password is correct");
+        }
+        else
+        {
+            Terminal.WriteLine("Sorry! Password is incorrect");
+            Terminal.WriteLine("Please, try again: ");
         }
     }
 
