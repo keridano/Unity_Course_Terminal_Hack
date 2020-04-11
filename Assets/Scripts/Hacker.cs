@@ -10,13 +10,13 @@ public enum Screen
 
 public class Hacker : MonoBehaviour
 {
-    int currentLevel;
-    Screen currentScreen = Screen.MainMenu;
-    string password;
+    readonly string[] level1Passwords = { "books", "aisle", "self", "password", "font", "borrow" };
+    readonly string[] level2Passwords = { "prisoner", "handcuffs", "holster", "uniform", "arrest" };
+    readonly string[] level3Passwords = { "solarstorm", "rocket", "andromeda", "universe", "propeler" };
 
-    const string levelOnePwd = "science";
-    const string levelTwoPwd = "judgement";
-    const string levelThreePwd = "solar_storm";
+    int currentLevel;
+    string password;
+    Screen currentScreen = Screen.MainMenu;
 
     // Start is called before the first frame update
     void Start()
@@ -70,11 +70,11 @@ public class Hacker : MonoBehaviour
             int.TryParse(input, out currentLevel);
 
             //Set Pwd for level
-            password = currentLevel == 1
-                ? levelOnePwd
+            password = (string)(currentLevel == 1
+                ? GetRandomValueFromArray(level1Passwords)
                 : currentLevel == 2
-                    ? password = levelTwoPwd
-                    : password = levelThreePwd;
+                    ? GetRandomValueFromArray(level2Passwords)
+                    : GetRandomValueFromArray(level3Passwords));
 
             StartGame();
         }
@@ -116,5 +116,11 @@ public class Hacker : MonoBehaviour
         }
     }
 
+    private object GetRandomValueFromArray(object[] input)
+    {
+        var random = new System.Random();
+        int index = random.Next(0, input.Length);
+        return input[index];
+    }
 
 }
