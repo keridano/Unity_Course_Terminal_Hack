@@ -1,12 +1,5 @@
 ﻿using UnityEngine;
 
-public enum Screen
-{
-    MainMenu,
-    Password,
-    Win
-}
-
 public class Hacker : MonoBehaviour
 {
     readonly string[] level1Passwords = { "books", "aisle", "self", "password", "font", "borrow" };
@@ -44,6 +37,10 @@ public class Hacker : MonoBehaviour
         {
             CheckPassword(input);
         }
+        else if (currentScreen == Screen.Win)
+        {
+            ShowMainMenu();
+        }
     }
 
     private void ShowMainMenu(string greetings = "Hello")
@@ -76,7 +73,7 @@ public class Hacker : MonoBehaviour
         }
         else
         {
-            Terminal.WriteLine("Please select a correct level");
+            Terminal.WriteLine("Please select a correct level (1, 2 or 3)");
         }
     }
 
@@ -91,17 +88,63 @@ public class Hacker : MonoBehaviour
         }
         else
         {
-            Terminal.WriteLine("You selected level " + currentLevel);
-
-            //Set Pwd for level
-            password = (string)(currentLevel == 1
-                ? GetRandomValueFromArray(level1Passwords)
-                : currentLevel == 2
-                    ? GetRandomValueFromArray(level2Passwords)
-                    : GetRandomValueFromArray(level3Passwords));
-
-            Terminal.WriteLine("Please enter your Password: ");
+            DisplayCurrentLevel();
+            SetPwdAndGiveHint();
         }
+    }
+
+    private void DisplayCurrentLevel()
+    {
+        Terminal.ClearScreen();
+        switch (currentLevel)
+        {
+            case 1:
+                Terminal.WriteLine(@"
+ _      _ _                          
+| |    (_) |                         
+| |     _| |__  _ __ __ _ _ __ _   _ 
+| |    | | '_ \| '__/ _` | '__| | | |
+| |____| | |_) | | | (_| | |  | |_| |
+|______|_|_.__/|_|  \__,_|_|   \__, |
+                                __/ |
+                               |___/ 
+");
+                break;
+            case 2:
+                Terminal.WriteLine(@"
+ _____      _ _          
+|  __ \    | (_)         
+| |__) |__ | |_  ___ ___ 
+|  ___/ _ \| | |/ __/ _ \
+| |  | (_) | | | (_|  __/
+|_|   \___/|_|_|\___\___|
+");
+                break;
+            case 3:
+                Terminal.WriteLine(@"
+ _   _                 
+| \ | |                
+|  \| | __ _ ___  __ _ 
+| . ` |/ _` / __|/ _` |
+| |\  | (_| \__ \ (_| |
+|_| \_|\__,_|___/\__,_|
+");
+                break;
+
+        }
+    }
+
+    private void SetPwdAndGiveHint()
+    {
+        //Set Pwd for level
+        password = (string)(currentLevel == 1
+            ? Utils.GetRandomValueFromArray(level1Passwords)
+            : currentLevel == 2
+                ? Utils.GetRandomValueFromArray(level2Passwords)
+                : Utils.GetRandomValueFromArray(level3Passwords));
+
+        Terminal.WriteLine("Please enter Password (hint: " + password.Anagram() + ")");
+        Terminal.WriteLine("OR enter 'menu' to return to mainMenu");
     }
 
     private void CheckPassword(string input)
@@ -138,6 +181,7 @@ Have a book!
 (______(/
 ");
                 break;
+
             case 2:
                 Terminal.WriteLine(@"
 Here's the prison key!
@@ -146,6 +190,7 @@ d8o8azzzzzzzzd   b
               `o'
 ");
                 break;
+
             case 3:
                 Terminal.WriteLine(@"
 Rocket is departing!
@@ -161,13 +206,26 @@ Rocket is departing!
 ");
                 break;
 
+            default:
+                Terminal.WriteLine("Something went wrong, returning to Main Menu");
+                ShowMainMenu();
+                break;
         }
     }
+}
 
-    private object GetRandomValueFromArray(object[] input)
+public static class Utils
+{
+    public static object GetRandomValueFromArray(object[] input)
     {
         int index = Random.Range(0, input.Length);
         return input[index];
     }
+}
 
+public enum Screen
+{
+    MainMenu,
+    Password,
+    Win
 }
