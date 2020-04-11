@@ -2,6 +2,7 @@
 
 public class Hacker : MonoBehaviour
 {
+    private const string menuHint = "OR type 'menu' to return to mainMenu";
     readonly string[] level1Passwords = { "books", "aisle", "self", "password", "font", "borrow" };
     readonly string[] level2Passwords = { "prisoner", "handcuffs", "holster", "uniform", "arrest" };
     readonly string[] level3Passwords = { "solarstorm", "rocket", "andromeda", "universe", "propeler" };
@@ -28,6 +29,14 @@ public class Hacker : MonoBehaviour
         if(input == "menu")
         {
             ShowMainMenu();
+        }
+        else if (input =="exit" || input == "quit" || input == "close")
+        {
+            Terminal.ClearScreen();
+            currentScreen = Screen.Close;
+            Terminal.WriteLine("If you are using the web version\nof the game please close the tab\nof your browser");
+            Terminal.WriteLine(menuHint);
+            Application.Quit();
         }
         else if(currentScreen == Screen.MainMenu)
         {
@@ -79,8 +88,6 @@ public class Hacker : MonoBehaviour
 
     private void StartGame()
     {
-        currentScreen = Screen.Password;
-
         if (currentLevel == 0)
         {
             Terminal.WriteLine("Something went wrong, returning to Main Menu");
@@ -88,6 +95,7 @@ public class Hacker : MonoBehaviour
         }
         else
         {
+            currentScreen = Screen.Password;
             DisplayCurrentLevel();
             SetPwdAndGiveHint();
         }
@@ -144,7 +152,7 @@ public class Hacker : MonoBehaviour
                 : Utils.GetRandomValueFromArray(level3Passwords));
 
         Terminal.WriteLine("Please enter Password (hint: " + password.Anagram() + ")");
-        Terminal.WriteLine("OR enter 'menu' to return to mainMenu");
+        Terminal.WriteLine(menuHint);
     }
 
     private void CheckPassword(string input)
@@ -155,8 +163,8 @@ public class Hacker : MonoBehaviour
         }
         else
         {
-            Terminal.WriteLine("Sorry! Password is incorrect");
-            Terminal.WriteLine("Please, try again: ");
+            Terminal.WriteLine("Sorry! Password is incorrect, try again");
+            Terminal.WriteLine(menuHint);
         }
     }
 
@@ -227,5 +235,6 @@ public enum Screen
 {
     MainMenu,
     Password,
-    Win
+    Win,
+    Close
 }
