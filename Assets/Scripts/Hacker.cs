@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum Screen
 {
@@ -65,17 +64,10 @@ public class Hacker : MonoBehaviour
 
     private void RunMainMenu(string input)
     {
-        if (input == "1" || input == "2" || input == "3")
+        bool isValidLevel = input == "1" || input == "2" || input == "3";
+
+        if (isValidLevel && int.TryParse(input, out currentLevel))
         {
-            int.TryParse(input, out currentLevel);
-
-            //Set Pwd for level
-            password = (string)(currentLevel == 1
-                ? GetRandomValueFromArray(level1Passwords)
-                : currentLevel == 2
-                    ? GetRandomValueFromArray(level2Passwords)
-                    : GetRandomValueFromArray(level3Passwords));
-
             StartGame();
         }
         else if (input == "007")
@@ -91,6 +83,7 @@ public class Hacker : MonoBehaviour
     private void StartGame()
     {
         currentScreen = Screen.Password;
+
         if (currentLevel == 0)
         {
             Terminal.WriteLine("Something went wrong, returning to Main Menu");
@@ -99,6 +92,14 @@ public class Hacker : MonoBehaviour
         else
         {
             Terminal.WriteLine("You selected level " + currentLevel);
+
+            //Set Pwd for level
+            password = (string)(currentLevel == 1
+                ? GetRandomValueFromArray(level1Passwords)
+                : currentLevel == 2
+                    ? GetRandomValueFromArray(level2Passwords)
+                    : GetRandomValueFromArray(level3Passwords));
+
             Terminal.WriteLine("Please enter your Password: ");
         }
     }
@@ -118,8 +119,7 @@ public class Hacker : MonoBehaviour
 
     private object GetRandomValueFromArray(object[] input)
     {
-        var random = new System.Random();
-        int index = random.Next(0, input.Length);
+        int index = Random.Range(0, input.Length);
         return input[index];
     }
 
